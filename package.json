@@ -9,9 +9,6 @@
   "keywords": [],
   "author": "Rohit (row) Bajaj",
   "license": "MIT",
-  "dependencies": {
-    "chalk": "^5.3.0"
-  },
   "devDependencies": {
     "@types/node": "^22.9.0",
     "ts-node": "^10.9.2",
