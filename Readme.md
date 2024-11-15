@@ -16,7 +16,7 @@
 ## 📦 Installation
 
 ```bash
-npm install konsoul
+npm i konsoul
 ```
 
 ## 🚀 Quick Start
@@ -207,25 +207,6 @@ konsoul.preset("metric", {
 - Styles: `border-normal`, `border-dashed`, `spacy`, `extra-spacy`, `double`
 - Text formats: `bold`, `italic`, `underline`, `strikethrough`
 - Animations: `spinner`, `progressBar`, `typing`
-
-## 🛠️ Work in Progress
-
-Konsoul is actively being developed, and we value your feedback! Here's what's coming:
-
-- 📝 Custom log file support
-- 🎨 More animation types
-- 📊 Enhanced chart rendering
-- 🔍 Search and filter capabilities
-- 🔄 Log rotation and management
-
-## 🤝 Contributing
-
-Your feedback and contributions are invaluable! If you have ideas for improvements or find any issues, please:
-
-1. Open an issue
-2. Submit a pull request
-3. Share your use cases
-4. Suggest new features
 
 ## 📄 License
 

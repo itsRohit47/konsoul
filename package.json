@@ -1,6 +1,6 @@
 {
   "name": "konsoul",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "A simple and useful console.log wrapper",
   "main": "src/index.js",
   "scripts": {

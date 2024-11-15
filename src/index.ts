@@ -352,64 +352,6 @@ class Konsoul {
     };
   }
 
-  async startSpinner(
-    message: string = "Loading...",
-    color: ColorName = "cyan"
-  ) {
-    let frameIndex = 0;
-    const frames = defaultAnimationOptions.frames || [];
-
-    this.spinnerInterval = setInterval(() => {
-      process.stdout.write(
-        `\r\x1b[${colorCodes[color]}m${message} ${frames[frameIndex]}\x1b[0m`
-      );
-      frameIndex = (frameIndex + 1) % frames.length;
-    }, defaultAnimationOptions.speed);
-  }
-
-  stopSpinner() {
-    if (this.spinnerInterval) {
-      clearInterval(this.spinnerInterval);
-      this.spinnerInterval = null;
-      process.stdout.write("\r\x1b[K");
-    }
-  }
-
-  async startProgressBar(total: number = 100, color: ColorName = "green") {
-    let current = 0;
-
-    this.progressInterval = setInterval(() => {
-      const progress = Math.floor((current / total) * 50);
-      const bar = `${"█".repeat(progress)}${".".repeat(50 - progress)}`;
-      process.stdout.write(
-        `\r\x1b[${colorCodes[color]}m[${bar}] ${current}/${total}\x1b[0m`
-      );
-
-      current += 1;
-      if (current > total) this.stopProgressBar();
-    }, 50);
-  }
-
-  stopProgressBar() {
-    if (this.progressInterval) {
-      clearInterval(this.progressInterval);
-      this.progressInterval = null;
-      process.stdout.write("\r\x1b[K");
-    }
-  }
-
-  async typeMessage(
-    message: string,
-    speed: number = 50,
-    color: ColorName = "white"
-  ) {
-    for (const char of message) {
-      process.stdout.write(`\x1b[${colorCodes[color]}m${char}\x1b[0m`);
-      await new Promise((resolve) => setTimeout(resolve, speed));
-    }
-    process.stdout.write("\n");
-  }
-
   // Table handling methods
   private printTableWithStyle(data: object[], options: LogOptions) {
     const {
@@ -477,74 +419,6 @@ class Konsoul {
     return String(data);
   }
 
-  private async handleAnimation(
-    msg: any,
-    animationOptions: AnimationOptions,
-    options: LogOptions
-  ) {
-    switch (animationOptions.type) {
-      case "spinner":
-        await this.animateSpinner(msg, animationOptions, options);
-        break;
-      case "typing":
-        await this.typeMessage(
-          String(msg),
-          animationOptions.speed || 50,
-          options.color
-        );
-        break;
-      case "progressBar":
-        await this.animateProgressBar(msg, animationOptions, options);
-        break;
-    }
-  }
-
-  private async animateSpinner(
-    msg: any,
-    animationOptions: AnimationOptions,
-    options: LogOptions
-  ) {
-    return new Promise<void>((resolve) => {
-      this.startSpinner(
-        animationOptions.text || String(msg),
-        options.color || "cyan"
-      );
-
-      setTimeout(() => {
-        this.stopSpinner();
-        this.printMessage(msg, options);
-        resolve();
-      }, animationOptions.duration || 2000);
-    });
-  }
-
-  private async animateProgressBar(
-    msg: any,
-    animationOptions: AnimationOptions,
-    options: LogOptions
-  ) {
-    return new Promise<void>((resolve) => {
-      this.startProgressBar(100, options.color || "green");
-
-      setTimeout(() => {
-        this.stopProgressBar();
-        this.printMessage(msg, options);
-        resolve();
-      }, animationOptions.duration || 2000);
-    });
-  }
-
-  // Public methods
-  async log(msg: any, options: LogOptions = {}) {
-    const animationOptions = this.processAnimationOptions(options);
-
-    if (animationOptions.enabled) {
-      await this.handleAnimation(msg, animationOptions, options);
-    } else {
-      this.printMessage(msg, options);
-    }
-  }
-
   private printMessage(msg: any, options: LogOptions) {
     if (!this.shouldLog(options)) return;
 
@@ -558,6 +432,10 @@ class Konsoul {
 
     const formattedMessage = this.formatMessage(formattedData, options);
     console.log(formattedMessage);
+  }
+
+  log(msg: any, options: LogOptions = {}) {
+    this.printMessage(msg, options);
   }
 
   info(msg: any) {
@@ -584,7 +462,7 @@ class Konsoul {
     console.clear();
   }
 
-  async delay(ms: number) {
+  delay(ms: number) {
     return new Promise((resolve) => setTimeout(resolve, ms));
   }
 
@@ -605,5 +483,4 @@ class Konsoul {
   }
 }
 
-// Export singleton instance
 export const konsoul = new Konsoul();
